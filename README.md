@@ -1,5 +1,6 @@
 # GxClubDrive.lv2
 
+Overdrive Pedal Simulation based on a EF86 Pentode Valve Simulation.
 
 
 ![GxClubDrive](https://raw.githubusercontent.com/brummer10/GxClubDrive.lv2/master/GxClubDrive.png)
