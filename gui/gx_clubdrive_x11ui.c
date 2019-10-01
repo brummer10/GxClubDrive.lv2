@@ -180,6 +180,7 @@ typedef struct {
 	cairo_t *crm;
 
 	gx_controller controls[CONTROLS];
+	int block_event;
 	double start_value;
 	double v1_value;
 	gx_scale rescale;
@@ -267,6 +268,7 @@ static LV2UI_Handle instantiate(const struct _LV2UI_Descriptor * descriptor,
 	ui->controls[2] = (gx_controller) {{0.5, 0.5, 0.0, 1.0, 0.01}, {220, 50, 61, 61}, false,"VOLUME", KNOB, VOLUME};
 	ui->controls[3] = (gx_controller) {{-70.0, -70.0, -70.0, 6.0, 0.0001}, {50, 250, 230, 13}, false,"V1", METER, V1};
 
+	ui->block_event = -1;
 	ui->start_value = 0.0;
 	ui->v1_value = 20.*log10(0.0);;
 	ui->sc = NULL;
@@ -722,9 +724,10 @@ static void send_controller_event(gx_clubdriveUI *ui, int controller) {
 static void check_value_changed(gx_clubdriveUI *ui, int i, float* value) {
 	if(fabs(*(value) - ui->controls[i].adj.value)>=0.00001) {
 		ui->controls[i].adj.value = *(value);
-        if (ui->controls[i].type != METER) {
-            ui->write_function(ui->controller,ui->controls[i].port,sizeof(float),0,value);
-        }
+		if (ui->controls[i].type != METER) {
+			if (ui->block_event != ui->controls[i].port)
+				ui->write_function(ui->controller,ui->controls[i].port,sizeof(float),0,value);
+		}
 		send_controller_event(ui, i);
 	}
 }
@@ -1086,6 +1089,7 @@ static void port_event(LV2UI_Handle handle, uint32_t port_index,
             if (ui->controls[i].type == METER) {
                 value = power2db(ui, *(float*)buffer);
             }
+			ui->block_event = (int)port_index;
 			check_value_changed(ui, i, &value);
 		}
 	}
