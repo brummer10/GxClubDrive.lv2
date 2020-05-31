@@ -75,11 +75,11 @@ endif
    #@build resource object files
 $(RES_OBJECTS) : gui/pedal.png gui/pswitch.png gui/meter_overlay.png gui/meter_surface.png gui/knob.png
 	@echo $(LGREEN)"generate resource files,"$(NONE)
-	-@cd ./gui && ld -r -b binary pedal.png -o pedal.o
-	-@cd ./gui && ld -r -b binary pswitch.png -o pswitch.o
-	-@cd ./gui && ld -r -b binary meter_overlay.png -o meter_overlay.o
-	-@cd ./gui && ld -r -b binary meter_surface.png -o meter_surface.o
-	-@cd ./gui && ld -r -b binary knob.png -o knob.o
+	-@cd ./gui && $(LD) -r -b binary pedal.png -o pedal.o
+	-@cd ./gui && $(LD) -r -b binary pswitch.png -o pswitch.o
+	-@cd ./gui && $(LD) -r -b binary meter_overlay.png -o meter_overlay.o
+	-@cd ./gui && $(LD) -r -b binary meter_surface.png -o meter_surface.o
+	-@cd ./gui && $(LD) -r -b binary knob.png -o knob.o
 
 clean :
 	@rm -f $(NAME).so
