@@ -1085,12 +1085,13 @@ static void port_event(LV2UI_Handle handle, uint32_t port_index,
 	gx_clubdriveUI* ui = (gx_clubdriveUI*)handle;
 	float value = *(float*)buffer;
 	for (int i=0;i<CONTROLS;i++) {
-        if (port_index == ui->controls[i].port) {
-            if (ui->controls[i].type == METER) {
-                value = power2db(ui, *(float*)buffer);
-            }
+		if (port_index == ui->controls[i].port) {
+			if (ui->controls[i].type == METER) {
+				value = power2db(ui, *(float*)buffer);
+			}
 			ui->block_event = (int)port_index;
 			check_value_changed(ui, i, &value);
+			ui->block_event = -1;
 		}
 	}
 }
